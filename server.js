@@ -1,29 +1,25 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 const app = express();
-const port = process.env.PORT || 3000;
+const PORT = 3000; // Choose a port for your backend
 
-// Middleware to parse JSON
+app.use(cors());
 app.use(bodyParser.json());
 
-// Endpoint to handle GET requests
-app.get('/hello', (req, res) => {
-  res.status(200).send('Hello from the server!');
+app.post('/email', (req, res) => {
+  const userData = req.body;
+
+  // Here you can handle the received data as needed, for example, storing it in a database.
+
+  // For demonstration purposes, we'll just log the received data.
+  console.log('Received data:', userData);
+
+  // Respond with a success message
+  res.json({ message: 'Data received successfully' });
 });
 
-// Endpoint to handle POST requests
-app.post('/log', (req, res) => {
-  const data = req.body;
-
-  // Log the received data
-  console.log('Received data:', data);
-
-  res.status(200).send('Data received successfully.');
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
-
-// Start the server
-app.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
-});
-
