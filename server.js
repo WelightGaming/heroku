@@ -24,9 +24,9 @@ app.post('/email', async (req, res) => {
     });
 
     // Respond with a success message
-    res.json({ message: 'Data received successfully and sent to Discord webhook' });
+    res.json({ message: 'Data received successfully' });
   } catch (error) {
-    console.error('Error sending data to Discord webhook:', error.message);
+    console.error('Error sending data', error.message);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
