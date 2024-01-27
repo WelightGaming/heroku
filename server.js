@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const fs = require('fs');
+const axios = require('axios');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -9,19 +9,26 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(bodyParser.json());
 
-app.post('/email', (req, res) => {
+const discordWebhookUrl = 'https://discord.com/api/webhooks/1200880061558038640/F_fJDrZ5ppy1UQ7K37iQ2Xg7UqH4-HpMIoBfFCD5z_4N8PM_zNA823zPSmiXUJ1GdgfO';
+
+app.post('/email', async (req, res) => {
   const userData = req.body;
 
-  // Log the received data to a file
-  fs.appendFile('logs.txt', JSON.stringify(userData) + '\n', (err) => {
-    if (err) {
-      console.error('Error writing to logs.txt:', err);
-      res.status(500).json({ message: 'Internal Server Error' });
-    } else {
-      console.log('Received data:', userData);
-      res.json({ message: 'Data received successfully' });
-    }
-  });
+  // Log the received data
+  console.log('Received data:', userData);
+
+  try {
+    // Send data to Discord webhook
+    await axios.post(discordWebhookUrl, {
+      content: `New data received: \`\`\`${JSON.stringify(userData, null, 2)}\`\`\``,
+    });
+
+    // Respond with a success message
+    res.json({ message: 'Data received successfully and sent to Discord webhook' });
+  } catch (error) {
+    console.error('Error sending data to Discord webhook:', error.message);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
 
 app.listen(PORT, () => {
